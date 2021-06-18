@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>模拟测试应用</title>
+</head>
+<body>
+  <div id="root"></div>
+  <button onClick="changeData()">改变name和age</button>
+  <script src="./vue2/mock.js"></script>
+  <script>
+    const root = document.querySelector('#root');
+    var vue = new Vue({
+      data() {
+        return {
+          name: '张三',
+          age: 10
+        }
+      },
+      computed: {
+        info() {
+          return this.name + this.age
+        }
+      },
+      watch: {
+        name(oldValue, newValue) {
+          console.log(oldValue, newValue)
+        }
+      },
+      render() {
+        root.innerHTML = `${this.name}----${this.age}----${this.info}`
+      }
+  })
+
+  function changeData() {
+    vue.name = '李四'
+    vue.age = 20
+  }
+  </script>
+</body>
+</html>
