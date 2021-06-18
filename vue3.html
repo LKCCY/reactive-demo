@@ -12,6 +12,7 @@
   <script>
     const root = document.querySelector('#root');
     let list = reactive({ name: '张三', age: 10 })
+    let info = computed(() => list.name + list.age)
     function changeData () {
       list.name = '李四'
       list.age = 150
@@ -19,7 +20,7 @@
     const mountApp = createApp({
       setup () {
         return () => {
-          root.innerHTML = `${list.name}----${list.age}`
+          root.innerHTML = `${list.name}----${list.age}---${info.value}`
         }
       }
     })

@@ -147,3 +147,43 @@ function trigger (target, type, key, newValue, oldValue, oldTarget) {
 
   effects.forEach(run)
 }
+
+function computed (getterOrOptions) {
+  let getter
+  let setter
+  if (isFunction (getterOrOptions)) {
+    getter = getterOrOptions
+    setter = () => {}
+  } else {
+    getter = getterOrOptions.get
+    setter = getterOrOptions.set
+  }
+
+  let dirty = true
+
+  const runner = effect(getter, {
+    lazy: true, // 只有触发 get时才会触发 getteer
+    scheduler: () => {
+      if (!dirty) {
+        dirty = true
+        trigger(computed, 'set', 'value')
+      }
+    }
+  })
+
+  let computed = {
+    effect: runner,
+    get value () {
+      if (dirty) {
+        value = runner()
+        dirty = false
+      }
+      track(computed, 'get', 'value')
+      return value
+    },
+    set value (newValue) {
+      setter(newValue)
+    }
+  }
+  return computed
+}
